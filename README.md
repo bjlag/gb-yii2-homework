@@ -1,6 +1,8 @@
 # GB-Yii2-homework
 GeekBrains - домашняя работа по курсу Yii2 Framework
 
+## Урок 1. Настройка рабочей среды на базе Ubuntu, шаблоны Yii
+
 * Развернул виртуальную машину c настроенным сервером с помощью Vagrant файла проекта yii-app-basic.
 * Создал контроллер TestController с одним методом actionIndex.
 * Создал вьюху "/views/test/index.php" для вывода данных метода actionIndex.

@@ -13,14 +13,32 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        $productData = [
-            'id' => 1,
-            'name' => 'Шапка ушанка',
-            'category' => 'Головные уборы',
-            'price' => 12000,
+        $productsData = [
+            [
+                'id' => 1,
+                'name' => 'Шапка ушанка',
+                'category' => 'Головные уборы',
+                'price' => 12000
+            ],
+            [
+                'id' => 2,
+                'name' => 'Кепка',
+                'category' => 'Головные уборы',
+                'price' => 1500
+            ],
+            [
+                'id' => 3,
+                'name' => 'Кроссовки',
+                'category' => 'Обувь',
+                'price' => 10500
+            ]
         ];
-        $product = new Product( $productData );
 
-        return $this->render( 'index', [ 'product' => $product ] );
+        $products = [];
+        foreach ( $productsData as $data ) {
+            $products[] = new Product( $data );
+        }
+
+        return $this->render( 'index', [ 'products' => $products ] );
     }
 }

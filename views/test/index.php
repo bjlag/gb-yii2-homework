@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $products array */
+/* @var $products \app\models\Product[] */
 
 use yii\helpers\Html;
 
@@ -16,7 +16,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
     <?php
     $count = count( $products );
 
-    /** @var \app\models\Product $item */
     foreach ( $products as $key => $item ) {
 
         echo "ID: {$item->getId()}<br>";
@@ -31,7 +30,6 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 
     <h2>Вывод с помощью виджета DetailView</h2>
     <?php
-    /** @var \app\models\Product $item */
     foreach ( $products as $item ) {
         echo \yii\widgets\DetailView::widget( [
             'model' => $item->getProps(),

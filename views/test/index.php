@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $products \app\models\Product[] */
+/* @var $component string */
 
 use yii\helpers\Html;
 
@@ -10,6 +11,11 @@ $this->params[ 'breadcrumbs' ][] = $this->title;
 ?>
 <div class="site-about">
     <h1><?= Html::encode( $this->title ) ?></h1>
+
+    <h2>Данные компонента Test</h2>
+    <p>
+        <?= $component ?>
+    </p>
 
     <h2>Прямой вывод из модели</h2>
 

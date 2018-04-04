@@ -12,4 +12,9 @@ class TestService extends Component
     {
         return $this->prop;
     }
+
+    public function setProp( $value )
+    {
+        $this->prop = $value;
+    }
 }

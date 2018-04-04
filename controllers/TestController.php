@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\Product;
 use yii\web\Controller;
 
 class TestController extends Controller
@@ -13,7 +12,6 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-//        \Yii::$app->test->setProp( 'new value' );
         $component = \Yii::$app->test->getProp();
 
         return $this->render( 'index', [

@@ -29,9 +29,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'name',
-            'price',
-            'created_at',
+            [
+                'attribute' => 'name',
+                'format' => 'html',
+                'value' => "<b>{$model->name}</b>"
+            ],
+            [
+                'attribute' => 'price',
+                'format' => ( $model->price > 0 ? 'currency' : 'html' ),
+                'value' => ( $model->price > 0 ? $model->price : '<span class="text-danger">не указана</span>' )
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'datetime'
+            ],
         ],
     ]) ?>
 

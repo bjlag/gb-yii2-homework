@@ -2,77 +2,48 @@
 
 namespace app\models;
 
-use yii\base\Model;
+use Yii;
 
 /**
- * Class Product
- * @package app\models
+ * This is the model class for table "product".
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $price
+ * @property int $created_at
  */
-class Product extends Model
+class Product extends \yii\db\ActiveRecord
 {
-    private $id;
-    private $name;
-    private $category;
-    private $price;
-
     /**
-     * Product constructor.
-     * @param array $product
-     * @param array $config
+     * {@inheritdoc}
      */
-    public function __construct( array $product, array $config = [] )
+    public static function tableName()
     {
-        parent::__construct( $config );
-
-        $this->id = $product[ 'id' ];
-        $this->name = $product[ 'name' ];
-        $this->category = $product[ 'category' ];
-        $this->price = $product[ 'price' ];
+        return 'product';
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Получить все свойства в виде ассоциативного массива.
-     * @return array
-     */
-    public function getProps()
+    public function rules()
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'category' => $this->category,
-            'price' => "{$this->price} руб."
+            [['name', 'price', 'created_at'], 'required'],
+            [['created_at'], 'integer'],
+            [['name', 'price'], 'string', 'max' => 50],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'Name',
+            'price' => 'Price',
+            'created_at' => 'Created At',
         ];
     }
 }

@@ -13,6 +13,9 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
+//        \Yii::$app->test->setProp( 'new value' );
+        $component = \Yii::$app->test->getProp();
+
         $productsData = [
             [
                 'id' => 1,
@@ -39,6 +42,9 @@ class TestController extends Controller
             $products[] = new Product( $data );
         }
 
-        return $this->render( 'index', [ 'products' => $products ] );
+        return $this->render( 'index', [
+            'component' => $component,
+            'products' => $products
+        ] );
     }
 }

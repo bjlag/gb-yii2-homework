@@ -16,35 +16,8 @@ class TestController extends Controller
 //        \Yii::$app->test->setProp( 'new value' );
         $component = \Yii::$app->test->getProp();
 
-        $productsData = [
-            [
-                'id' => 1,
-                'name' => 'Шапка ушанка',
-                'category' => 'Головные уборы',
-                'price' => 12000
-            ],
-            [
-                'id' => 2,
-                'name' => 'Кепка',
-                'category' => 'Головные уборы',
-                'price' => 1500
-            ],
-            [
-                'id' => 3,
-                'name' => 'Кроссовки',
-                'category' => 'Обувь',
-                'price' => 10500
-            ]
-        ];
-
-        $products = [];
-        foreach ( $productsData as $data ) {
-            $products[] = new Product( $data );
-        }
-
         return $this->render( 'index', [
-            'component' => $component,
-            'products' => $products
+            'component' => $component
         ] );
     }
 }

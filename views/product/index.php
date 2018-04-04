@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -21,14 +22,32 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'name',
-            'price',
-            'created_at',
+            [
+                'attribute' => 'name',
+                'format' => 'html',
+                'value' => function( $model ) {
+                    /** @var \app\models\Product $model */
+                    return Html::a( $model->name, [ 'view', 'id' => $model->id ] );
+                }
+            ],
+            [
+                'attribute' => 'price',
+                'format' => 'html',
+                'value' => function( $model ) {
+                    /** @var \app\models\Product $model */
+                    return ( $model->price > 0
+                        ? Yii::$app->formatter->asCurrency( $model->price )
+                        : '<span class="text-danger">не указана</span>' );
+                }
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'datetime',
+                'contentOptions' => [ 'class' => 'small' ]
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => \yii\grid\ActionColumn::class],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

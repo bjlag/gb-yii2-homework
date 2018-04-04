@@ -50,7 +50,8 @@ $config = [
             ],
         ],
         'test' => [
-            'class' => \app\components\TestService::class
+            'class' => \app\components\TestService::class,
+            'prop' => 'new value'
         ]
     ],
     'params' => $params,

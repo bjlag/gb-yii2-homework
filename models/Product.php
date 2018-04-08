@@ -23,6 +23,16 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return array
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_DEFAULT => [ 'name' ]
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules()

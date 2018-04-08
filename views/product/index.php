@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use \yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'html',
                 'value' => function( $model ) {
                     /** @var \app\models\Product $model */
-                    return Html::a( $model->name, [ 'view', 'id' => $model->id ] );
+                    return Html::a( $model->name, Url::to( [ 'product/view', 'id' => $model->id ] ) );
                 }
             ],
             [

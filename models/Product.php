@@ -14,6 +14,9 @@ use Yii;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    const SCENARIO_CREATE = 'create';
+    const SCENARIO_UPDATE = 'update';
+
     /**
      * {@inheritdoc}
      */
@@ -28,7 +31,9 @@ class Product extends \yii\db\ActiveRecord
     public function scenarios()
     {
         return [
-            self::SCENARIO_DEFAULT => [ 'name' ]
+            self::SCENARIO_DEFAULT => [ 'name' ],
+            self::SCENARIO_CREATE => [ 'name', 'price', 'created_at' ],
+            self::SCENARIO_UPDATE => [ 'price', 'created_at' ]
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\db\Query;
 use yii\web\Controller;
 
 class TestController extends Controller
@@ -42,6 +43,21 @@ class TestController extends Controller
 
         return $this->render( 'insert', [
             'data' => 'Вставка данных в таблицу User'
+        ] );
+    }
+
+    public function actionSelect()
+    {
+        $query = 'SELECT * FROM [[user]] WHERE {{id}} = :id';
+
+        $result[ 'result_1' ] = \Yii::$app->db->createCommand( $query, [ 'id' => 1 ] )->queryAll();
+        $result[ 'result_2' ] = ( new Query() )->from( 'user' )->where( 'id > 1' )->orderBy( [ 'name' => SORT_ASC ] )->all();
+        $result[ 'result_3' ] = ( new Query() )->from( 'user' )->count();
+
+        _end( $result );
+
+        return $this->render( 'select', [
+            'result' => $result
         ] );
     }
 }

@@ -11,7 +11,7 @@ GeekBrains - домашняя работа по курсу Yii2 Framework
     * \yii\db\createCommand: SQL запрос с универсальными кавычками и параметром.
     * \yii\db\Query: все записи с id>1 отсортированные по имени `orderBy()`
     * \yii\db\Query: количество записей `count()`
-    * \yii\db\Query: содержимое note с присоединенными по полю `creator_id` записями из таблицы user `innerJoin()`
+    * \yii\db\Query: содержимое таблицы `note` с присоединенными по полю `creator_id` записями из таблицы user `innerJoin()`
 
 ## Урок 3. Хелперы, атрибуты, валидация и сценарии моделей, формы
 

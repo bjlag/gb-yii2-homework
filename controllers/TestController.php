@@ -26,6 +26,7 @@ class TestController extends Controller
      */
     public function actionInsert()
     {
+        // Добавление данных в таблицу user с помощью insert()
         for ( $i = 0; $i < 3; $i++ ) {
             $values = [
                 'username' => "login_{$i}",
@@ -41,8 +42,15 @@ class TestController extends Controller
             \Yii::$app->db->createCommand()->insert( 'user', $values )->execute();
         }
 
+        // Пакетное добавление данных в таблицу note с помощью batchInsert()
+        \Yii::$app->db->createCommand()->batchInsert( 'note', [ 'text', 'creator_id', 'created_at' ], [
+            [ 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', 1, strtotime( '10-04-2018' ) ],
+            [ 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', 1, strtotime( '11-04-2018' ) ],
+            [ 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.', 1, strtotime( '12-04-2018' ) ],
+        ] )->execute();
+
         return $this->render( 'insert', [
-            'data' => 'Вставка данных в таблицу User'
+            'data' => 'Добавление данных'
         ] );
     }
 

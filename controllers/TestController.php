@@ -56,11 +56,15 @@ class TestController extends Controller
 
     public function actionSelect()
     {
+        // Выборка данных из таблицы user
         $query = 'SELECT * FROM [[user]] WHERE {{id}} = :id';
 
         $result[ 'result_1' ] = \Yii::$app->db->createCommand( $query, [ 'id' => 1 ] )->queryAll();
         $result[ 'result_2' ] = ( new Query() )->from( 'user' )->where( 'id > 1' )->orderBy( [ 'name' => SORT_ASC ] )->all();
         $result[ 'result_3' ] = ( new Query() )->from( 'user' )->count();
+
+        // Выборка данных из note
+        $result[ 'result_4' ] = ( new Query() )->from( 'note n' )->innerJoin( 'user u', 'n.creator_id = u.id' )->all();
 
         _end( $result );
 

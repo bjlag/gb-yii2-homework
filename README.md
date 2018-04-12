@@ -8,10 +8,10 @@ GeekBrains - домашняя работа по курсу Yii2 Framework
 * Создал миграцию, в рамках которой создаются 3 таблицы: `user`, `note`, `access`. Так же реализовал возможность отката миграции.
 * Добавил экшен `TestController::actionInsert()`, в котором добавляются данные в таблицу user методом `insert()` и в таблицу note методом `batchInsert()`.
 + Добавил экшен `TestController::actionSelect()`, в котором выбираю данные из таблиц `user` и `note`:
-    * _\yii\db\createCommand_: SQL запрос с универсальными кавычками и параметром.
-    * _\yii\db\Query_: все записи с id>1 отсортированные по имени `orderBy()`
-    * _\yii\db\Query_: количество записей `count()`
-    * _\yii\db\Query_: содержимое note с присоединенными по полю `creator_id` записями из таблицы user `innerJoin()`
+    * \yii\db\createCommand: SQL запрос с универсальными кавычками и параметром.
+    * \yii\db\Query: все записи с id>1 отсортированные по имени `orderBy()`
+    * \yii\db\Query: количество записей `count()`
+    * \yii\db\Query: содержимое note с присоединенными по полю `creator_id` записями из таблицы user `innerJoin()`
 
 ## Урок 3. Хелперы, атрибуты, валидация и сценарии моделей, формы
 

@@ -17,6 +17,10 @@ use Yii;
  */
 class Note extends \yii\db\ActiveRecord
 {
+    const RELATION_CREATOR = 'creator';
+    const RELATION_ACCESSES = 'accesses';
+    const RELATION_ACCESSES_USERS = 'accessUsers';
+
     /**
      * {@inheritdoc}
      */
@@ -66,6 +70,15 @@ class Note extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'creator_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessUsers()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id'])->via(self::RELATION_ACCESSES);
+    }
+
 
     /**
      * {@inheritdoc}

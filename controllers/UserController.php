@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Access;
+use app\models\Note;
 use Yii;
 use app\models\User;
 use yii\data\ActiveDataProvider;
@@ -107,6 +109,32 @@ class UserController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionTest()
+    {
+        // Создаем запись в таблице user
+        $modelUser = new User( [
+            'username' => 'test',
+            'name' => 'Test user',
+            'password_hash' => uniqid()
+        ] );
+
+        $modelUser->save();
+
+        // Создаем запись в таблице note
+        $modelNote = new Note( [
+            'text' => 'Текст новой заметки',
+            'created_at' => time()
+        ] );
+        $modelNote->link( Note::RELATION_CREATOR, $modelUser );
+
+        // Создаем запись в таблице access
+        $modelUser = User::findOne( $modelUser->id );
+        $modelNote = Note::findOne( $modelNote->id );
+        $modelNote->link( Note::RELATION_ACCESSES_USERS, $modelUser );
+
+        return $modelUser->save();
     }
 
     /**

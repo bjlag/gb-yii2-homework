@@ -22,6 +22,8 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    const RELATION_ACCESSES = 'accesses';
+
     /**
      * {@inheritdoc}
      */
@@ -74,6 +76,15 @@ class User extends \yii\db\ActiveRecord
     public function getNotes()
     {
         return $this->hasMany(Note::className(), ['creator_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessedNotes()
+    {
+        return $this->hasMany(Note::className(), ['creator_id' => 'user_id'])
+            ->via( self::RELATION_ACCESSES );
     }
 
     /**

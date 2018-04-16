@@ -7,6 +7,7 @@ use app\models\Note;
 use Yii;
 use app\models\User;
 use yii\data\ActiveDataProvider;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -134,7 +135,21 @@ class UserController extends Controller
         $modelNote = Note::findOne( $modelNote->id );
         $modelNote->link( Note::RELATION_ACCESSES_USERS, $modelUser );
 
-        return $modelUser->save();
+        return $this->renderContent( 'create' );
+    }
+
+    public function actionLoad()
+    {
+        // Прочитать из базы все записи из User применив жадную подгрузку связанных данных из Note,
+        // с запросами без JOIN
+        //        $modelUser = User::find()->where( [ 'id' => 2 ] )->with( 'notes' )->all();
+        $modelUser = User::find()->with( 'notes' )->all();
+
+        // Прочитать из базы все записи из User применив жадную подгрузку связанных данных из Note,
+        // с запросом содержащем JOIN
+        $modelUser = User::find()->innerJoinWith( 'notes' )->asArray()->all();
+
+        return $this->renderContent( VarDumper::dumpAsString( $modelUser, 10, true )  );
     }
 
     /**

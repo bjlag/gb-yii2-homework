@@ -23,6 +23,7 @@ use Yii;
 class User extends \yii\db\ActiveRecord
 {
     const RELATION_ACCESSES = 'accesses';
+    const RELATION_ACCESSED_NOTES = 'accessedNotes';
 
     /**
      * {@inheritdoc}

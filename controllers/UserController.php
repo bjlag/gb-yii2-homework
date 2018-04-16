@@ -152,6 +152,15 @@ class UserController extends Controller
         return $this->renderContent( VarDumper::dumpAsString( $modelUser, 10, true )  );
     }
 
+    public function actionAccess()
+    {
+        $modelUser = User::findOne( 1 );
+        $modelNote = Note::findOne( 3 );
+        $modelUser->link( User::RELATION_ACCESSED_NOTES, $modelNote );
+
+        return $this->renderContent( VarDumper::dumpAsString( $modelUser, 10, true )  );
+    }
+
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

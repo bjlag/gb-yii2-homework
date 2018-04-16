@@ -76,7 +76,7 @@ class Note extends \yii\db\ActiveRecord
      */
     public function getAccessUsers()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id'])->via(self::RELATION_ACCESSES);
+        return $this->hasMany(User::className(), ['id' => 'user_id'])->via(self::RELATION_ACCESSES);
     }
 
 

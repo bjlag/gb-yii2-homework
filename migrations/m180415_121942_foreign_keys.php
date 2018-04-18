@@ -12,9 +12,9 @@ class m180415_121942_foreign_keys extends Migration
      */
     public function safeUp()
     {
-        \Yii::$app->db->createCommand()->addForeignKey( 'fk_note_user', 'note', 'creator_id', 'user', 'id' )->execute();
-        \Yii::$app->db->createCommand()->addForeignKey( 'fk_access_note', 'access', 'note_id', 'note', 'id' )->execute();
-        \Yii::$app->db->createCommand()->addForeignKey( 'fk_access_user', 'access', 'user_id', 'user', 'id' )->execute();
+        $this->addForeignKey( 'fk_note_user', 'note', 'creator_id', 'user', 'id' );
+        $this->addForeignKey( 'fk_access_note', 'access', 'note_id', 'note', 'id' );
+        $this->addForeignKey( 'fk_access_user', 'access', 'user_id', 'user', 'id' );
     }
 
     /**
@@ -22,9 +22,9 @@ class m180415_121942_foreign_keys extends Migration
      */
     public function safeDown()
     {
-        \Yii::$app->db->createCommand()->dropForeignKey( 'fk_note_user', 'note' )->execute();
-        \Yii::$app->db->createCommand()->dropForeignKey( 'fk_access_note', 'access' )->execute();
-        \Yii::$app->db->createCommand()->dropForeignKey( 'fk_access_user', 'access' )->execute();
+        $this->dropForeignKey( 'fk_note_user', 'note' );
+        $this->dropForeignKey( 'fk_access_note', 'access' );
+        $this->dropForeignKey( 'fk_access_user', 'access' );
 
         return true;
     }

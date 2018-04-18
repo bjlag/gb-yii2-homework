@@ -33,6 +33,9 @@ class User extends ActiveRecord implements IdentityInterface
     /* @var string $password */
     public $password;
 
+    /* @var string $passwordTwo */
+    public $passwordTwo;
+
     /**
      * {@inheritdoc}
      */
@@ -48,8 +51,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'name', 'password'], 'required'],
+            ['password', 'compare', 'compareAttribute' => 'passwordTwo'],
             [['created_at', 'updated_at'], 'integer'],
-            [['username', 'name', 'surname', 'password', 'access_token', 'auth_key'], 'string', 'max' => 255],
+            [['username', 'name', 'surname', 'password', 'passwordTwo', 'access_token', 'auth_key'], 'string', 'max' => 255],
         ];
     }
 
@@ -64,6 +68,7 @@ class User extends ActiveRecord implements IdentityInterface
             'name' => 'Name',
             'surname' => 'Surname',
             'password' => 'Password',
+            'passwordTwo' => 'Password repeat',
             'access_token' => 'Access Token',
             'auth_key' => 'Auth Key',
             'created_at' => 'Created At',

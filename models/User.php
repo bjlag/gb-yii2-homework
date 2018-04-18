@@ -28,6 +28,9 @@ class User extends \yii\db\ActiveRecord
     const RELATION_ACCESSES = 'accesses';
     const RELATION_ACCESSED_NOTES = 'accessedNotes';
 
+    /* @var string $password */
+    public $password;
+
     /**
      * {@inheritdoc}
      */
@@ -42,9 +45,9 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'name', 'password_hash'], 'required'],
+            [['username', 'name', 'password'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
-            [['username', 'name', 'surname', 'password_hash', 'access_token', 'auth_key'], 'string', 'max' => 255],
+            [['username', 'name', 'surname', 'password', 'access_token', 'auth_key'], 'string', 'max' => 255],
         ];
     }
 
@@ -58,7 +61,7 @@ class User extends \yii\db\ActiveRecord
             'username' => 'Username',
             'name' => 'Name',
             'surname' => 'Surname',
-            'password_hash' => 'Password Hash',
+            'password' => 'Password',
             'access_token' => 'Access Token',
             'auth_key' => 'Auth Key',
             'created_at' => 'Created At',

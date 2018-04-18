@@ -35,8 +35,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'password_hash',
             'access_token',
             'auth_key',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'created_at',
+                'format' => 'datetime'
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'datetime'
+            ]
         ],
     ]) ?>
 

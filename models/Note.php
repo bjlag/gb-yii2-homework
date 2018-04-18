@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "note".
@@ -14,6 +15,8 @@ use Yii;
  *
  * @property Access[] $accesses
  * @property User $creator
+ *
+ * @mixin TimestampBehavior
  */
 class Note extends \yii\db\ActiveRecord
 {
@@ -52,6 +55,16 @@ class Note extends \yii\db\ActiveRecord
             'text' => 'Text',
             'creator_id' => 'Creator ID',
             'created_at' => 'Created At',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'updatedAtAttribute' => false
+            ]
         ];
     }
 

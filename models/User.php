@@ -20,6 +20,8 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property Access[] $accesses
  * @property Note[] $notes
+ *
+ * @mixin TimestampBehavior
  */
 class User extends \yii\db\ActiveRecord
 {

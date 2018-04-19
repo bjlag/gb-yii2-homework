@@ -30,10 +30,16 @@ class User extends ActiveRecord implements IdentityInterface
     const RELATION_ACCESSES = 'accesses';
     const RELATION_ACCESSED_NOTES = 'accessedNotes';
 
-    /* @var string $password */
+    /**
+     * Пароль введенный в форме входа
+     * @var string $password
+     */
     public $password;
 
-    /* @var string $passwordTwo */
+    /**
+     * Повторно введенный пароль в форме входа
+     * @var string $passwordTwo
+     */
     public $passwordTwo;
 
     /**
@@ -76,6 +82,9 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function behaviors()
     {
         return [
@@ -83,6 +92,11 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @param bool $insert
+     * @return bool
+     * @throws \yii\base\Exception
+     */
     public function beforeSave( $insert )
     {
         if (!parent::beforeSave( $insert ) ) {

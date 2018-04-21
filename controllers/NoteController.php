@@ -33,13 +33,13 @@ class NoteController extends Controller
      * Lists all Note models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionMy()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Note::find(),
+            'query' => Note::find()->byCreator( Yii::$app->user->getId() ),
         ]);
 
-        return $this->render('index', [
+        return $this->render('my', [
             'dataProvider' => $dataProvider,
         ]);
     }

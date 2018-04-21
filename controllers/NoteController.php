@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Note;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -21,8 +22,17 @@ class NoteController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -36,10 +46,6 @@ class NoteController extends Controller
      */
     public function actionMy()
     {
-        if ( Yii::$app->user->isGuest ) {
-            throw new ForbiddenHttpException( 'Нет доступа' );
-        }
-
         $dataProvider = new ActiveDataProvider([
             'query' => Note::find()->byCreator( Yii::$app->user->getId() ),
         ]);

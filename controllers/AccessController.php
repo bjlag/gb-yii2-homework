@@ -69,7 +69,7 @@ class AccessController extends Controller
         $model = new Access();
         $model->note_id = $noteId;
 
-        $users = User::find()->select( [ "concat( name, ' ', surname)" ] )->indexBy( 'id' )
+        $users = User::find()->select( [ "trim( concat( name, ' ', surname) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

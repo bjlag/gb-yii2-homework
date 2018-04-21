@@ -6,6 +6,7 @@ use Yii;
 use app\models\Note;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -35,6 +36,10 @@ class NoteController extends Controller
      */
     public function actionMy()
     {
+        if ( Yii::$app->user->isGuest ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
+
         $dataProvider = new ActiveDataProvider([
             'query' => Note::find()->byCreator( Yii::$app->user->getId() ),
         ]);

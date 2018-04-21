@@ -98,8 +98,12 @@ class NoteController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if ( $model->creator_id != Yii::$app->user->getId() ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash( 'success', "Заметка $id успешно обновлена" );
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -117,9 +121,15 @@ class NoteController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if ( $model->creator_id != Yii::$app->user->getId() ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
 
-        return $this->redirect(['index']);
+        $model->delete();
+        Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
+
+        return $this->redirect(['my']);
     }
 
     /**

@@ -7,8 +7,8 @@ use yii\helpers\Html;
 /* @var $model app\models\Access */
 /* @var $users array */
 
-$this->title = 'Create Access';
-$this->params['breadcrumbs'][] = ['label' => 'Accesses', 'url' => ['index']];
+$this->title = 'Дать доступ к заметке: ' . $model->note_id;
+$this->params['breadcrumbs'][] = ['label' => 'Мои заметки', 'url' => ['note/my']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="access-create">

@@ -44,8 +44,8 @@ class Access extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'note_id' => 'Note ID',
-            'user_id' => 'User ID',
+            'note_id' => 'Заметка',
+            'user_id' => 'Пользователь',
         ];
     }
 

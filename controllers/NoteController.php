@@ -70,9 +70,11 @@ class NoteController extends Controller
     public function actionCreate()
     {
         $model = new Note();
+        $model->creator_id = Yii::$app->user->getId();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash( 'success', 'Заметка успешно создана' );
+            return $this->redirect( [ 'my' ] );
         }
 
         return $this->render('create', [

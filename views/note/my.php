@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Notes';
+$this->title = 'Мои заметки';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="note-index">
@@ -15,21 +15,30 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(); ?>
 
     <p>
-        <?= Html::a('Create Note', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать заметку', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            'id',
             'text:ntext',
-            'creator_id',
             [
                 'attribute' => 'created_at',
                 'format' => 'datetime'
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {share} {delete}',
+                'buttons' => [
+                    'share' => function ( $url, $model, $key ) {
+                        /** @var $model \app\controllers\NoteController */
+
+                        $icon = \yii\bootstrap\Html::icon( 'share' );
+                        return Html::a( $icon, [ 'access/create', 'id' => $model->id ] );
+                    }
+                ]
+            ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         /** @var $model \app\controllers\NoteController */
 
                         $icon = \yii\bootstrap\Html::icon( 'share' );
-                        return Html::a( $icon, [ 'access/create', 'id' => $model->id ] );
+                        return Html::a( $icon, [ 'access/create', 'noteId' => $model->id ] );
                     }
                 ]
             ],

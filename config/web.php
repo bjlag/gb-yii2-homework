@@ -7,6 +7,7 @@ $config = [
     'id' => 'basic',
     'language' => 'ru_RU',
     'timeZone' => 'Europe/Moscow',
+    'name' => 'Заметки',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [

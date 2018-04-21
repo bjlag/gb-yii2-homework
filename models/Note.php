@@ -52,9 +52,9 @@ class Note extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'text' => 'Text',
+            'text' => 'Текст заметки',
             'creator_id' => 'Creator ID',
-            'created_at' => 'Created At',
+            'created_at' => 'Дата создания',
         ];
     }
 

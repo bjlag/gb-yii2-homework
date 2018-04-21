@@ -2,11 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\Note;
 use app\models\User;
 use Yii;
 use app\models\Access;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -68,6 +70,11 @@ class AccessController extends Controller
     {
         $model = new Access();
         $model->note_id = $noteId;
+
+        $modelNote = Note::findOne( $noteId );
+        if ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
 
         $users = User::find()->select( [ "trim( concat( name, ' ', surname) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();

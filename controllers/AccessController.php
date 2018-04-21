@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\User;
 use Yii;
 use app\models\Access;
 use yii\data\ActiveDataProvider;
@@ -60,11 +61,16 @@ class AccessController extends Controller
     /**
      * Creates a new Access model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param $noteId
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate( $noteId )
     {
         $model = new Access();
+        $model->note_id = $noteId;
+
+        $users = User::find()->select( [ "concat( name, ' ', surname)" ] )->indexBy( 'id' )
+            ->exceptUser( Yii::$app->user->getId() )->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,6 +78,7 @@ class AccessController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'users' => $users
         ]);
     }
 

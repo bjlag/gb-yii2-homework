@@ -11,7 +11,7 @@ class NoteQuery extends \yii\db\ActiveQuery
 {
     public function byCreator( $userId )
     {
-        return $this->where( [ 'creator_id' => $userId ] );
+        return $this->andWhere( [ 'creator_id' => $userId ] );
     }
 
     /**

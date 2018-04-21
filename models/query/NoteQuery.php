@@ -9,10 +9,10 @@ namespace app\models\query;
  */
 class NoteQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
+    public function byCreator( $userId )
     {
-        return $this->andWhere('[[status]]=1');
-    }*/
+        return $this->where( [ 'creator_id' => $userId ] );
+    }
 
     /**
      * {@inheritdoc}

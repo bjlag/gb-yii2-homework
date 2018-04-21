@@ -80,7 +80,8 @@ class AccessController extends Controller
             ->exceptUser( Yii::$app->user->getId() )->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
+            return $this->redirect( ['note/my'] );
         }
 
         return $this->render('create', [

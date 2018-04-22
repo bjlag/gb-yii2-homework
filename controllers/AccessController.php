@@ -76,7 +76,7 @@ class AccessController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        $users = User::find()->select( [ "trim( concat( name, ' ', surname) )" ] )->indexBy( 'id' )
+        $users = User::find()->select( [ "trim( concat( ifnull( name, '' ), ' ', ifnull( surname, '' ) ) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

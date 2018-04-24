@@ -31,11 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update} {share} {delete}',
                 'buttons' => [
-                    'share' => function ( $url, $model, $key ) {
-                        /** @var $model \app\controllers\NoteController */
-
+                    'share' => function ( $url, \app\models\Note $model, $key ) {
                         $icon = \yii\bootstrap\Html::icon( 'share' );
-                        return Html::a( $icon, [ 'access/create', 'noteId' => $model->id ] );
+                        $options = [
+                            'title' => 'Дать доступ',
+                            'aria-label' => 'Дать доступ',
+                            'data-pjax' => '0',
+                        ];
+                        return Html::a( $icon, [ 'access/create', 'noteId' => $model->id ], $options );
                     }
                 ]
             ],

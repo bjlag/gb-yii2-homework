@@ -56,6 +56,23 @@ class NoteController extends Controller
     }
 
     /**
+     * Список расшаренных заметок.
+     * @return mixed
+     */
+    public function actionShared()
+    {
+        $query = Note::find()->innerJoinWith( Note::RELATION_ACCESSES )->byCreator( Yii::$app->user->getId() );
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+
+        return $this->render('shared', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
      * Displays a single Note model.
      * @param integer $id
      * @return mixed

@@ -128,12 +128,13 @@ class NoteController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( $model->creator_id != Yii::$app->user->getId() ) {
+        if ( $model->isUserNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -152,12 +153,15 @@ class NoteController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if ( $model->creator_id != Yii::$app->user->getId() ) {
+        if ( $model->isUserNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 

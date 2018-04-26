@@ -44,38 +44,10 @@ class AccessController extends Controller
     }
 
     /**
-     * Lists all Access models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Access::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Access model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Access model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * Предоставить доступ к указанной заметке. Кому предоставить доступ выбирается в форме.
      * @param $noteId
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionCreate( $noteId )
     {
@@ -83,7 +55,7 @@ class AccessController extends Controller
         $model->note_id = $noteId;
 
         $modelNote = Note::findOne( $noteId );
-        if ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ) {
+        if ( !$modelNote->isUserNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -110,7 +82,7 @@ class AccessController extends Controller
     public function actionUnsharedAll( $noteId )
     {
         $modelNote = Note::findOne( $noteId );
-        if ( !Note::isAccess( $modelNote ) ) {
+        if ( !$modelNote->isUserNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -118,40 +90,6 @@ class AccessController extends Controller
         Yii::$app->session->setFlash( 'success', "Для всех пользователей удален доступ к заметке {$noteId}" );
 
         return $this->redirect( [ 'note/shared' ] );
-    }
-
-    /**
-     * Updates an existing Access model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Access model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**

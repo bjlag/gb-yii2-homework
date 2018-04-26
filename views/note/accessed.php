@@ -18,6 +18,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'text:ntext',
+
+            // todo: автора вывести в виде ссылки на просмотр данных о пользователе
+            // todo: реализовать возможность сортировки по полю Автор
+            [
+                'label' => 'Автор',
+                'attribute' => 'creator.name'
+            ],
             [
                 'attribute' => 'created_at',
                 'format' => 'datetime'

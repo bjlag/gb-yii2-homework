@@ -92,7 +92,6 @@ class Note extends \yii\db\ActiveRecord
         return $this->hasMany(User::className(), ['id' => 'user_id'])->via(self::RELATION_ACCESSES);
     }
 
-
     /**
      * {@inheritdoc}
      * @return \app\models\query\NoteQuery the active query used by this AR class.
@@ -103,12 +102,12 @@ class Note extends \yii\db\ActiveRecord
     }
 
     /**
-     * Проверка доступа к заметке
-     * @param Note $modelNote
-     * @return bool
+     * Проверка что заметка принадлежит пользователю
+     * @param integer $userId
+     * @return bool TRUE заметка принадлежит пользователю, FALSE иначе
      */
-    public static function isAccess( Note $modelNote )
+    public function isUserNote( $userId )
     {
-        return ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ? false : true );
+        return ( $this->creator_id && $this->creator_id == $userId ? true : false );
     }
 }

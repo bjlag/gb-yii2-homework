@@ -14,10 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
 
-    <p>
-        <?= Html::a('Создать заметку', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
@@ -26,16 +22,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created_at',
                 'format' => 'datetime'
             ],
-
+            // todo: вывести информацию кому предоставлен доступ
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {share} {delete}',
+                'template' => '{view} {unshared}',
                 'buttons' => [
-                    'share' => function ( $url, $model, $key ) {
+                    'unshared' => function ( $url, $model, $key ) {
                         /** @var $model \app\controllers\NoteController */
-
-                        $icon = \yii\bootstrap\Html::icon( 'share' );
-                        return Html::a( $icon, [ 'access/create', 'noteId' => $model->id ] );
+                        $options = [
+                            'title' => 'Удалить доступ для всех пользователей',
+                            'aria-label' => 'Удалить доступ для всех пользователей',
+                            'data' => [
+                                'confirm' => 'Вы уверены, что хотите удалить доступ к заметке для всех пользователей?',
+                                'method' => 'post',
+                            ]
+                        ];
+                        $icon = \yii\bootstrap\Html::icon( 'remove' );
+                        return Html::a( $icon, [ 'access/unshared-all', 'noteId' => $model->id ], $options );
                     }
                 ]
             ],

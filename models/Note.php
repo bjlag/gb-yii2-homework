@@ -101,4 +101,14 @@ class Note extends \yii\db\ActiveRecord
     {
         return new \app\models\query\NoteQuery(get_called_class());
     }
+
+    /**
+     * Проверка доступа к заметке
+     * @param $modelNote
+     * @return bool
+     */
+    public static function isAccess( $modelNote )
+    {
+        return ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ? false : true );
+    }
 }

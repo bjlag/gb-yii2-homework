@@ -101,6 +101,25 @@ class AccessController extends Controller
     }
 
     /**
+     * Удалить доступ к указанной заметке.
+     * @param $noteId
+     * @return \yii\web\Response
+     * @throws ForbiddenHttpException
+     */
+    public function actionUnsharedAll( $noteId )
+    {
+        $modelNote = Note::findOne( $noteId );
+        if ( !Note::isAccess( $modelNote ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
+
+        $modelNote->unlinkAll( Note::RELATION_ACCESSES_USERS, true );
+        Yii::$app->session->setFlash( 'success', "Для всех пользователей удален доступ к заметке {$noteId}" );
+
+        return $this->redirect( [ 'note/shared' ] );
+    }
+
+    /**
      * Updates an existing Access model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id

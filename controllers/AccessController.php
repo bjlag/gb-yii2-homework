@@ -51,20 +51,20 @@ class AccessController extends Controller
      */
     public function actionCreate( $noteId )
     {
-        $model = new Access();
-        $model->note_id = $noteId;
-
         $modelNote = Note::findOne( $noteId );
         if ( !$modelNote->isUserNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
+
+        $model = new Access();
+        $model->note_id = $noteId;
 
         $users = User::find()->select( [ "trim( concat( ifnull( name, '' ), ' ', ifnull( surname, '' ) ) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
-            return $this->redirect( ['note/my'] );
+            return $this->redirect( ['note/shared'] );
         }
 
         return $this->render('create', [

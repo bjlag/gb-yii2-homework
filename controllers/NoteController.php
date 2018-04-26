@@ -93,13 +93,18 @@ class NoteController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws ForbiddenHttpException
      */
     public function actionView($id)
     {
-        // todo: проверить доступ к заметке
+        $model = $this->findModel($id);
+
+        if ( !$model->isUserNote( Yii::$app->user->getId() ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

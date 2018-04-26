@@ -73,6 +73,22 @@ class NoteController extends Controller
     }
 
     /**
+     * Доступ к чужим заметкам.
+     */
+    public function actionAccessed()
+    {
+        $query = Note::find()->innerJoinWith( Note::RELATION_ACCESSES )->where( [ 'user_id' => Yii::$app->user->getId() ] );
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+
+        return $this->render('accessed', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
      * Displays a single Note model.
      * @param integer $id
      * @return mixed
@@ -80,6 +96,8 @@ class NoteController extends Controller
      */
     public function actionView($id)
     {
+        // todo: проверить доступ к заметке
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);

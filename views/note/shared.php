@@ -22,13 +22,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created_at',
                 'format' => 'datetime'
             ],
-            // todo: вывести информацию кому предоставлен доступ
+
+            [
+                'header' => 'Кому',
+                'value' => function ( \app\models\Note $model ) {
+                    return join( ', ', $model->getAccessUsers()->select( 'user.username' )->column() );
+                }
+            ],
+
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {unshared}',
                 'buttons' => [
-                    'unshared' => function ( $url, $model, $key ) {
-                        /** @var $model \app\controllers\NoteController */
+                    'unshared' => function ( $url, \app\models\Note $model, $key ) {
                         $options = [
                             'title' => 'Удалить доступ для всех пользователей',
                             'aria-label' => 'Удалить доступ для всех пользователей',

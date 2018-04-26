@@ -104,10 +104,10 @@ class Note extends \yii\db\ActiveRecord
 
     /**
      * Проверка доступа к заметке
-     * @param $modelNote
+     * @param Note $modelNote
      * @return bool
      */
-    public static function isAccess( $modelNote )
+    public static function isAccess( Note $modelNote )
     {
         return ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ? false : true );
     }

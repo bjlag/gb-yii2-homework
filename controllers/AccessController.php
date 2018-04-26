@@ -37,6 +37,7 @@ class AccessController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'unshared-all' => ['POST'],
                 ],
             ],
         ];

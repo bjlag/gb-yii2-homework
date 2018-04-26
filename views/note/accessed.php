@@ -20,7 +20,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'text:ntext',
 
             // todo: автора вывести в виде ссылки на просмотр данных о пользователе
-            // todo: реализовать возможность сортировки по полю Автор
             [
                 'label' => 'Автор',
                 'attribute' => 'creator.name'

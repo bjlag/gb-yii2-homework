@@ -77,11 +77,24 @@ class NoteController extends Controller
      */
     public function actionAccessed()
     {
-        $query = Note::find()->innerJoinWith( Note::RELATION_ACCESSES )->where( [ 'user_id' => Yii::$app->user->getId() ] );
+        $query = Note::find()->innerJoinWith( [ Note::RELATION_ACCESSES, Note::RELATION_CREATOR . ' c' ] )
+            ->where( [ 'user_id' => Yii::$app->user->getId() ] );
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query
         ]);
+
+        $dataProvider->sort->attributes = array_merge(
+            $dataProvider->sort->attributes,
+            [
+                'creator.name' => [
+                    'asc' => [ 'c.name' => SORT_ASC ],
+                    'desc' => [ 'c.name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Автор'
+                ]
+            ]
+        );
 
         return $this->render('accessed', [
             'dataProvider' => $dataProvider,

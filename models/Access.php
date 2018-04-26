@@ -49,6 +49,22 @@ class Access extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave( $insert )
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $modelAccess = Access::findOne( [ 'note_id' => $this->note_id, 'user_id' => $this->user_id ] );
+        if ( $modelAccess !== null ) {
+            Yii::$app->session->setFlash( 'error', 'Пользователю уже доступ предоставлен' );
+            return false;
+        }
+
+        return true;
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

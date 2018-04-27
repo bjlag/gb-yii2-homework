@@ -39,8 +39,14 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <?= $this->render( '_accessed', [
-        'dataProviderUsers' => $dataProviderUsers,
-    ] ) ?>
+    <?php
+    if ( $model->isCreatorNote( Yii::$app->user->getId() ) ): ?>
+
+        <?= $this->render( '_accessed', [
+            'dataProviderUsers' => $dataProviderUsers,
+        ] ) ?>
+
+    <?php
+    endif; ?>
 
 </div>

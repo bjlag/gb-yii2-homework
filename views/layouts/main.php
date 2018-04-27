@@ -41,7 +41,7 @@ AppAsset::register($this);
             [
                 'label' => 'Мои',
                 'url' => ['/note/my'],
-                //'active' => ( echo $this->context->route )
+                'active' => (bool) preg_match( '/^note\/(my|view|update|create)$/i', $this->context->route )
             ],
             ['label' => 'Расшаренные', 'url' => ['/note/shared']],
             ['label' => 'Доступ', 'url' => ['/note/accessed']],

@@ -52,7 +52,7 @@ class AccessController extends Controller
     public function actionCreate( $noteId )
     {
         $modelNote = Note::findOne( $noteId );
-        if ( !$modelNote->isUserNote( Yii::$app->user->getId() ) ) {
+        if ( !$modelNote->isCreatorNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -82,7 +82,7 @@ class AccessController extends Controller
     public function actionUnsharedAll( $noteId )
     {
         $modelNote = Note::findOne( $noteId );
-        if ( !$modelNote->isUserNote( Yii::$app->user->getId() ) ) {
+        if ( !$modelNote->isCreatorNote( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 

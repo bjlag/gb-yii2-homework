@@ -106,8 +106,18 @@ class Note extends \yii\db\ActiveRecord
      * @param integer $userId
      * @return bool TRUE заметка принадлежит пользователю, FALSE иначе
      */
-    public function isUserNote( $userId )
+    public function isCreatorNote( $userId )
     {
         return ( $this->creator_id && $this->creator_id == $userId ? true : false );
+    }
+
+    /**
+     * Проверяем, есть ли доступ к заметке.
+     * @param integer $userId
+     * @return bool TRUE доступ есть, FALSE иначе
+     */
+    public function isNoteAccessed( $userId )
+    {
+        return Note::getAccessUsers()->where( [ 'id' => $userId ] )->exists();
     }
 }

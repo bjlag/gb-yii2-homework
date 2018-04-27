@@ -38,7 +38,11 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Мои', 'url' => ['/note/my']],
+            [
+                'label' => 'Мои',
+                'url' => ['/note/my'],
+                //'active' => ( echo $this->context->route )
+            ],
             ['label' => 'Расшаренные', 'url' => ['/note/shared']],
             ['label' => 'Доступ', 'url' => ['/note/accessed']],
             Yii::$app->user->isGuest ? (

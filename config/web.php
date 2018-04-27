@@ -53,7 +53,8 @@ $config = [
             'suffix' => '/',
             'rules' => [
                 'note' => 'note/my',
-                'note/<action:(view|update|delete)>/<id:\d+>' => 'note/<action>',
+                'note/<id:\d+>' => 'note/view',
+                'note/<action:(update|delete)>/<id:\d+>' => 'note/<action>',
                 'access/<action:(create|unshared-all)>/<noteId:\d+>' => 'access/<action>',
                 'access/unshared/<accessId:\d+>' => 'access/unshared',
             ],

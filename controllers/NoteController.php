@@ -119,10 +119,38 @@ class NoteController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        $queryAccesses = Access::find()->innerJoinWith( Access::RELATION_USER )->where( [ 'note_id' => $id ] );
+        $queryAccesses = Access::find()->innerJoinWith( Access::RELATION_USER . ' u' )->where( [ 'note_id' => $id ] );
         $dataProviderAccesses = new ActiveDataProvider([
             'query' => $queryAccesses,
         ]);
+
+        $dataProviderAccesses->sort->attributes = array_merge(
+            $dataProviderAccesses->sort->attributes,
+            [
+                'user.username' => [
+                    'asc' => [ 'u.username' => SORT_ASC ],
+                    'desc' => [ 'u.username' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Логин'
+                ]
+            ],
+            [
+                'user.name' => [
+                    'asc' => [ 'u.name' => SORT_ASC ],
+                    'desc' => [ 'u.name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Имя'
+                ]
+            ],
+            [
+                'user.surname' => [
+                    'asc' => [ 'u.surname' => SORT_ASC ],
+                    'desc' => [ 'u.surname' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Фамилия'
+                ]
+            ]
+        );
 
         return $this->render('view', [
             'model' => $model,

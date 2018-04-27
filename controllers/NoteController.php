@@ -7,6 +7,7 @@ use app\models\User;
 use Yii;
 use app\models\Note;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -211,7 +212,6 @@ class NoteController extends Controller
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -220,8 +220,17 @@ class NoteController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        $model->delete();
-        Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
+        try {
+            $model->delete();
+            Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
+        } catch ( \Exception $e ) {
+            if ( $e->getCode() == '23000' ) {
+                Yii::$app->session->setFlash( 'error', "Заметка расшарина для доступа другим пользователям! 
+                    Удалите все доступы и повторите попытку" );
+
+                return $this->redirect( [ 'view', 'id' => $id ] );
+            }
+        }
 
         return $this->redirect(['my']);
     }

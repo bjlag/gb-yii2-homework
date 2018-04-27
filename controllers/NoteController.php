@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Access;
+use app\models\User;
 use Yii;
 use app\models\Note;
 use yii\data\ActiveDataProvider;
@@ -116,8 +118,14 @@ class NoteController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
+        $queryUsers = User::find()->innerJoinWith( 'accesses' )->where( [ 'note_id' => $id ] );
+        $dataProviderUsers = new ActiveDataProvider([
+            'query' => $queryUsers,
+        ]);
+
         return $this->render('view', [
             'model' => $model,
+            'dataProviderUsers' => $dataProviderUsers
         ]);
     }
 

@@ -39,9 +39,9 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Главная', 'url' => ['/site/index']],
-            ['label' => 'Мои заметки', 'url' => ['/note/my']],
-            ['label' => 'Users', 'url' => ['/user/index']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Мои', 'url' => ['/note/my']],
+            ['label' => 'Расшаренные', 'url' => ['/note/shared']],
+            ['label' => 'Доступ', 'url' => ['/note/accessed']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Войти', 'url' => ['/site/login']]
             ) : (

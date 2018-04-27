@@ -119,14 +119,14 @@ class NoteController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        $queryUsers = User::find()->innerJoinWith( 'accesses' )->where( [ 'note_id' => $id ] );
-        $dataProviderUsers = new ActiveDataProvider([
-            'query' => $queryUsers,
+        $queryAccesses = Access::find()->innerJoinWith( Access::RELATION_USER )->where( [ 'note_id' => $id ] );
+        $dataProviderAccesses = new ActiveDataProvider([
+            'query' => $queryAccesses,
         ]);
 
         return $this->render('view', [
             'model' => $model,
-            'dataProviderUsers' => $dataProviderUsers
+            'dataProviderAccesses' => $dataProviderAccesses
         ]);
     }
 

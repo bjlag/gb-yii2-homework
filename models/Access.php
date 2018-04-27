@@ -16,6 +16,9 @@ use Yii;
  */
 class Access extends \yii\db\ActiveRecord
 {
+    const RELATION_USER = 'user';
+    const RELATION_NOTE = 'note';
+
     /**
      * {@inheritdoc}
      */

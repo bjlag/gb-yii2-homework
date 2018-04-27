@@ -38,6 +38,7 @@ class AccessController extends Controller
                 'actions' => [
                     'delete' => ['POST'],
                     'unshared-all' => ['POST'],
+                    'unshared' => ['POST'],
                 ],
             ],
         ];
@@ -74,7 +75,7 @@ class AccessController extends Controller
     }
 
     /**
-     * Удалить доступ к указанной заметке.
+     * Удалить доступ всем пользователям к указанной заметке.
      * @param $noteId
      * @return \yii\web\Response
      * @throws ForbiddenHttpException
@@ -90,6 +91,29 @@ class AccessController extends Controller
         Yii::$app->session->setFlash( 'success', "Для всех пользователей удален доступ к заметке {$noteId}" );
 
         return $this->redirect( [ 'note/shared' ] );
+    }
+
+    /**
+     * Удалить указанный доступ.
+     * @param integer $accessId
+     * @return \yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionUnshared( $accessId )
+    {
+        $model = Access::findOne( $accessId );
+
+        $modelNote = Note::findOne( $model->note_id );
+        if ( !$modelNote->isCreatorNote( Yii::$app->user->getId() ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
+
+        $model->delete();
+        Yii::$app->session->setFlash( 'success', 'Доступ к заметке удален' );
+
+        return $this->redirect( [ 'note/view', 'id' => $model->note_id ] );
     }
 
     /**

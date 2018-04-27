@@ -6,7 +6,7 @@ use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Note */
-/* @var $dataProviderUsers yii\data\ActiveDataProvider */
+/* @var $dataProviderAccesses yii\data\ActiveDataProvider */
 
 $this->title = 'Заметка: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Мои заметки', 'url' => ['my']];
@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
     if ( $model->isCreatorNote( Yii::$app->user->getId() ) ): ?>
 
         <?= $this->render( '_accessed', [
-            'dataProviderUsers' => $dataProviderUsers,
+            'dataProviderAccesses' => $dataProviderAccesses,
         ] ) ?>
 
     <?php

@@ -220,16 +220,14 @@ class NoteController extends Controller
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        try {
+        if ( !$model->accesses ) {
             $model->delete();
             Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
-        } catch ( \Exception $e ) {
-            if ( $e->getCode() == '23000' ) {
-                Yii::$app->session->setFlash( 'error', "Заметка расшарина для доступа другим пользователям! 
+        } else {
+            Yii::$app->session->setFlash( 'error', "Заметка расшарина для доступа другим пользователям! 
                     Удалите все доступы и повторите попытку" );
 
-                return $this->redirect( [ 'view', 'id' => $id ] );
-            }
+            return $this->redirect( [ 'view', 'id' => $id ] );
         }
 
         return $this->redirect(['my']);

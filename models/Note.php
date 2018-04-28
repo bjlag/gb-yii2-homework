@@ -106,9 +106,9 @@ class Note extends \yii\db\ActiveRecord
      * @param integer $userId
      * @return bool TRUE заметка принадлежит пользователю, FALSE иначе
      */
-    public function isCreatorNote( $userId )
+    public function isCreator( $userId )
     {
-        return ( $this->creator_id && $this->creator_id == $userId ? true : false );
+        return $this->creator_id && $this->creator_id == $userId;
     }
 
     /**

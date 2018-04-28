@@ -115,7 +115,7 @@ class NoteController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ( !$model->isCreatorNote( Yii::$app->user->getId() )
+        if ( !$model->isCreator( Yii::$app->user->getId() )
             && !$model->isNoteAccessed( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
@@ -190,7 +190,7 @@ class NoteController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( !$model->isCreatorNote( Yii::$app->user->getId() ) ) {
+        if ( !$model->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -216,7 +216,7 @@ class NoteController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if ( !$model->isCreatorNote( Yii::$app->user->getId() ) ) {
+        if ( !$model->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 

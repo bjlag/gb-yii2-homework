@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\ForbiddenHttpException;
 
 /**
  * This is the model class for table "access".
@@ -60,8 +61,7 @@ class Access extends \yii\db\ActiveRecord
 
         $modelAccess = Access::findOne( [ 'note_id' => $this->note_id, 'user_id' => $this->user_id ] );
         if ( $modelAccess !== null ) {
-            Yii::$app->session->setFlash( 'error', 'Пользователю уже доступ предоставлен' );
-            return false;
+            throw new ForbiddenHttpException( 'Пользователю доступ уже предоставлен' );
         }
 
         return true;

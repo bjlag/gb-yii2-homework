@@ -63,9 +63,14 @@ class AccessController extends Controller
         $users = User::find()->select( [ "trim( concat( ifnull( name, '' ), ' ', ifnull( surname, '' ) ) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
-            return $this->redirect( ['note/shared'] );
+        try {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
+                return $this->redirect( ['note/shared'] );
+            }
+        } catch ( ForbiddenHttpException $e ) {
+            Yii::$app->session->setFlash( 'error', $e->getMessage() );
+            return $this->redirect( ['access/create', 'noteId' => $noteId ] );
         }
 
         return $this->render('create', [

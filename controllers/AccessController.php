@@ -109,9 +109,7 @@ class AccessController extends Controller
     public function actionUnshared( $accessId )
     {
         $model = Access::findOne( $accessId );
-
-        $modelNote = Note::findOne( $model->note_id );
-        if ( !$modelNote->isCreator( Yii::$app->user->getId() ) ) {
+        if ( !$model->note->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 

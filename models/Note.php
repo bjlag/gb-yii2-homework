@@ -116,8 +116,8 @@ class Note extends \yii\db\ActiveRecord
      * @param integer $userId
      * @return bool TRUE доступ есть, FALSE иначе
      */
-    public function isNoteAccessed( $userId )
+    public function isAccessedForUser( $userId )
     {
-        return Note::getAccessUsers()->where( [ 'id' => $userId ] )->exists();
+        return $this->getAccesses()->where( [ 'user_id' => $userId ] )->exists();
     }
 }

@@ -116,7 +116,7 @@ class NoteController extends Controller
         $model = $this->findModel($id);
 
         if ( !$model->isCreator( Yii::$app->user->getId() )
-            && !$model->isNoteAccessed( Yii::$app->user->getId() ) ) {
+            && !$model->isAccessedForUser( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 

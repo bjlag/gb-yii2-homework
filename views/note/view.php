@@ -2,9 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Note */
+/* @var $dataProviderAccesses yii\data\ActiveDataProvider */
 
 $this->title = 'Заметка: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Мои заметки', 'url' => ['my']];
@@ -36,5 +38,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ],
     ]) ?>
+
+    <?php
+    if ( $model->isCreator( Yii::$app->user->getId() ) ): ?>
+
+        <?= $this->render( '_accessed', [
+            'dataProviderAccesses' => $dataProviderAccesses,
+        ] ) ?>
+
+    <?php
+    endif; ?>
 
 </div>

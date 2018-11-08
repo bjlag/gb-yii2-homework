@@ -14,6 +14,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'defaultRoute' => 'note/my',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -49,7 +50,13 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'suffix' => '/',
             'rules' => [
+                'note' => 'note/my',
+                'note/<id:\d+>' => 'note/view',
+                'note/<action:(update|delete)>/<id:\d+>' => 'note/<action>',
+                'access/<action:(create|unshared-all)>/<noteId:\d+>' => 'access/<action>',
+                'access/unshared/<accessId:\d+>' => 'access/unshared',
             ],
         ],
         'test' => [

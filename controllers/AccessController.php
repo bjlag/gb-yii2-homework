@@ -7,6 +7,7 @@ use app\models\User;
 use Yii;
 use app\models\Access;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -23,65 +24,53 @@ class AccessController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'unshared-all' => ['POST'],
+                    'unshared' => ['POST'],
                 ],
             ],
         ];
     }
 
     /**
-     * Lists all Access models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Access::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single Access model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Access model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * Предоставить доступ к указанной заметке. Кому предоставить доступ выбирается в форме.
      * @param $noteId
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionCreate( $noteId )
     {
-        $model = new Access();
-        $model->note_id = $noteId;
-
         $modelNote = Note::findOne( $noteId );
-        if ( !$modelNote || $modelNote->creator_id != Yii::$app->user->getId() ) {
+        if ( !$modelNote->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
+
+        $model = new Access();
+        $model->note_id = $noteId;
 
         $users = User::find()->select( [ "trim( concat( ifnull( name, '' ), ' ', ifnull( surname, '' ) ) )" ] )->indexBy( 'id' )
             ->exceptUser( Yii::$app->user->getId() )->column();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
-            return $this->redirect( ['note/my'] );
+        try {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                Yii::$app->session->setFlash( 'success', "Предоставлен доступ к заметке $noteId пользователю {$model->user_id}" );
+                return $this->redirect( ['note/shared'] );
+            }
+        } catch ( ForbiddenHttpException $e ) {
+            Yii::$app->session->setFlash( 'error', $e->getMessage() );
+            return $this->redirect( ['access/create', 'noteId' => $noteId ] );
         }
 
         return $this->render('create', [
@@ -91,37 +80,43 @@ class AccessController extends Controller
     }
 
     /**
-     * Updates an existing Access model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * Удалить доступ всем пользователям к указанной заметке.
+     * @param $noteId
+     * @return \yii\web\Response
+     * @throws ForbiddenHttpException
      */
-    public function actionUpdate($id)
+    public function actionUnsharedAll( $noteId )
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $modelNote = Note::findOne( $noteId );
+        if ( !$modelNote->isCreator( Yii::$app->user->getId() ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $modelNote->unlinkAll( Note::RELATION_ACCESSES_USERS, true );
+        Yii::$app->session->setFlash( 'success', "Для всех пользователей удален доступ к заметке {$noteId}" );
+
+        return $this->redirect( [ 'note/shared' ] );
     }
 
     /**
-     * Deletes an existing Access model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * Удалить указанный доступ.
+     * @param integer $accessId
+     * @return \yii\web\Response
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
-    public function actionDelete($id)
+    public function actionUnshared( $accessId )
     {
-        $this->findModel($id)->delete();
+        $model = Access::findOne( $accessId );
+        if ( !$model->note->isCreator( Yii::$app->user->getId() ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
 
-        return $this->redirect(['index']);
+        $model->delete();
+        Yii::$app->session->setFlash( 'success', 'Доступ к заметке удален' );
+
+        return $this->redirect( [ 'note/view', 'id' => $model->note_id ] );
     }
 
     /**

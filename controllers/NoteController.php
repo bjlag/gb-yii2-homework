@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Access;
+use app\models\User;
 use Yii;
 use app\models\Note;
 use yii\data\ActiveDataProvider;
+use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -56,15 +59,103 @@ class NoteController extends Controller
     }
 
     /**
+     * Список расшаренных заметок.
+     * @return mixed
+     */
+    public function actionShared()
+    {
+        $query = Note::find()->innerJoinWith( Note::RELATION_ACCESSES )->byCreator( Yii::$app->user->getId() );
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+
+        return $this->render('shared', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Доступ к чужим заметкам.
+     */
+    public function actionAccessed()
+    {
+        $query = Note::find()->innerJoinWith( [ Note::RELATION_ACCESSES, Note::RELATION_CREATOR . ' c' ] )
+            ->where( [ 'user_id' => Yii::$app->user->getId() ] );
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+
+        $dataProvider->sort->attributes = array_merge(
+            $dataProvider->sort->attributes,
+            [
+                'creator.name' => [
+                    'asc' => [ 'c.name' => SORT_ASC ],
+                    'desc' => [ 'c.name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Автор'
+                ]
+            ]
+        );
+
+        return $this->render('accessed', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
      * Displays a single Note model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws ForbiddenHttpException
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        if ( !$model->isCreator( Yii::$app->user->getId() )
+            && !$model->isAccessedForUser( Yii::$app->user->getId() ) ) {
+            throw new ForbiddenHttpException( 'Нет доступа' );
+        }
+
+        $queryAccesses = Access::find()->innerJoinWith( Access::RELATION_USER . ' u' )->where( [ 'note_id' => $id ] );
+        $dataProviderAccesses = new ActiveDataProvider([
+            'query' => $queryAccesses,
+        ]);
+
+        $dataProviderAccesses->sort->attributes = array_merge(
+            $dataProviderAccesses->sort->attributes,
+            [
+                'user.username' => [
+                    'asc' => [ 'u.username' => SORT_ASC ],
+                    'desc' => [ 'u.username' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Логин'
+                ]
+            ],
+            [
+                'user.name' => [
+                    'asc' => [ 'u.name' => SORT_ASC ],
+                    'desc' => [ 'u.name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Имя'
+                ]
+            ],
+            [
+                'user.surname' => [
+                    'asc' => [ 'u.surname' => SORT_ASC ],
+                    'desc' => [ 'u.surname' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'Фамилия'
+                ]
+            ]
+        );
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'dataProviderAccesses' => $dataProviderAccesses
         ]);
     }
 
@@ -93,12 +184,13 @@ class NoteController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ( $model->creator_id != Yii::$app->user->getId() ) {
+        if ( !$model->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
@@ -117,17 +209,26 @@ class NoteController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        if ( $model->creator_id != Yii::$app->user->getId() ) {
+        if ( !$model->isCreator( Yii::$app->user->getId() ) ) {
             throw new ForbiddenHttpException( 'Нет доступа' );
         }
 
-        $model->delete();
-        Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
+        if ( !$model->accesses ) {
+            $model->delete();
+            Yii::$app->session->setFlash( 'success', "Заметка $id успешно удалена" );
+        } else {
+            Yii::$app->session->setFlash( 'error', "Заметка расшарина для доступа другим пользователям! 
+                    Удалите все доступы и повторите попытку" );
+
+            return $this->redirect( [ 'view', 'id' => $id ] );
+        }
 
         return $this->redirect(['my']);
     }

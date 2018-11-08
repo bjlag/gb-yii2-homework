@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\ForbiddenHttpException;
 
 /**
  * This is the model class for table "access".
@@ -16,6 +17,9 @@ use Yii;
  */
 class Access extends \yii\db\ActiveRecord
 {
+    const RELATION_USER = 'user';
+    const RELATION_NOTE = 'note';
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +52,21 @@ class Access extends \yii\db\ActiveRecord
             'user_id' => 'Пользователь',
         ];
     }
+
+    public function beforeSave( $insert )
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $modelAccess = Access::findOne( [ 'note_id' => $this->note_id, 'user_id' => $this->user_id ] );
+        if ( $modelAccess !== null ) {
+            throw new ForbiddenHttpException( 'Пользователю доступ уже предоставлен' );
+        }
+
+        return true;
+    }
+
 
     /**
      * @return \yii\db\ActiveQuery
